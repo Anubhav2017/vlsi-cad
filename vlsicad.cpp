@@ -179,8 +179,87 @@ bool check_for_pure_and_assign(vector<clause> &clauses,vector<bool> &vars, vecto
 
 	}
 
+}
 
+bool assign_random(vector<clause> &clauses,vector<bool> &vars, vector<bool> &assigned_vars){
+    
+    vector<clause> clauses1=clauses;
+    vector<clause> clauses2=clauses;
 
+    vector<bool> vars1=vars;
+    vector<bool> vars2=vars;
+
+    vector<bool> assigned_vars1=assigned_vars;
+    vector<bool> assigned_vars2=assigned_vars;
+
+    
+    for(int i=0;i<assigned_vars.size();i++){
+
+        if(! assigned_vars[i]){
+            
+            vars1[i]=0;
+            assigned_vars1[i]=1;
+            assign1(clauses1,i+1,0);
+            
+            bool sat=check_for_sat(clauses1);
+            
+            if(sat){
+                clauses=clauses1;
+                vars=vars1;
+                assigned_vars=assigned_vars1;
+                return true;
+            }
+
+            else{            	
+
+            	vars2[i]=1;
+            	assigned_vars2[i]=1;
+            	assign1(clauses2,i+1,0);
+            
+            	bool sat=check_for_sat(clauses2);
+            
+            	if(sat){
+                	clauses=clauses2;
+                	vars=vars2;
+                	assigned_vars=assigned_vars2;
+                	return true;
+            	}
+            	else{
+
+            		if(i==assigned_vars.size()-1)return false;
+
+            		else{
+
+            			bool ans=assign_random(clauses1,vars1,assigned_vars1);
+            			if(ans){
+            				clauses=clauses1;
+            				vars=vars1;
+            				assigned_vars=assigned_vars1;
+            				return true;
+            			}
+
+            			ans=assign_random(clauses2,vars2,assigned_vars2);
+
+            			if(ans){
+            				clauses=clauses2;
+            				vars=vars2;
+            				assigned_vars=assigned_vars2;
+            				return true;
+            			}
+            			else{
+            				return false;
+            			}
+
+            		}
+
+            	}            	
+
+            }
+            
+         
+        }
+    }    
+    
 }
 
 int main(){
@@ -218,26 +297,62 @@ int main(){
 
 	if(!sat){
 
-		/*vector<clause> clauses2(0);
-		for(int i=0;i<n;i++){
-			if(!clauses[i].return_value()){
-				clauses2.push_back(clauses[i]);
-			}
-		}
-		int n2=clauses2.size();*/
+		bool pure_exist=1;
 
-/*		vector<bool> vars2=vars;
-		vector<bool> assigned_vars2=assigned_vars;*/
+		while(pure_exist && !sat){
+			pure_exist=0;
 
 		for(int i=0;i<m;i++){
+
 			if(assigned_vars[i]==0){
 
-				bool pure=check_for_pure(clauses,i);
+				bool pure=check_for_pure_and_assign(clauses,vars,assigned_vars,i);
+				pure_exist=pure_exist || pure;
 
 			}
 		}
 
+		sat=check_for_sat(clauses);
+	}
 	    
 	}
+
+	if(!sat){
+
+		bool ans=assign_random(clauses,vars,assigned_vars);
+
+		if(ans){
+			for(int i=0;i<assigned_vars.size();i++){
+				if(assigned_vars[i]){
+					cout<<i+1<<" = "<<vars[i]<<'\n';
+				}
+				else{
+
+					cout<<i+1<<" = X"<<'\n';
+				}
+			}
+
+		}
+		else{
+			cout<<"Not solvable"<<'\n';
+		}
+
+
+	}
+	else{
+
+		for(int i=0;i<assigned_vars.size();i++){
+				if(assigned_vars[i]){
+					cout<<i+1<<" = "<<vars[i]<<'\n';
+				}
+				else{
+
+					cout<<i+1<<" = X"<<'\n';
+				}
+			}
+
+
+	}
+
 
 }

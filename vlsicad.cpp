@@ -152,18 +152,31 @@ bool check_for_sat(vector<clause> clauses){
     return ans;
 } 
 
-bool check_for_pure_and_assign(vector<clause> &clauses, int index){
+bool check_for_pure_and_assign(vector<clause> &clauses,vector<bool> &vars, vector<bool> &assigned_vars, int index){
 
-	bool pure=0;
+
 	vector<bool> var_values(0);
 
 	for(int i=0;i<clauses.size();i++){
 
-		if(clauses[i].exist(index+1)){
-
-			var_values.push_back()
-
+		if(clauses[i].exist(index+1) && !clauses[i].return_value()){
+			var_values.push_back(clauses[i].var_sign(index+1));
 		}
+	}
+
+	if(var_values.size()>0){
+
+		bool val=var_values[0];
+
+		for(int i=0;i<var_values.size();i++){
+			if(var_values[i] != val)return false;
+		}
+
+		assign1(clauses,index+1,val);
+		vars[index]=val;
+		assigned_vars[index]=1;
+
+
 	}
 
 
@@ -211,7 +224,6 @@ int main(){
 				clauses2.push_back(clauses[i]);
 			}
 		}
-
 		int n2=clauses2.size();*/
 
 /*		vector<bool> vars2=vars;

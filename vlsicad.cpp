@@ -29,6 +29,39 @@ struct clause{
 		n_remaining++;
 	}
 
+	bool exist(int var){
+
+		vector<int>::iterator iter;
+		iter=find(vars.begin(),vars.end(),var);
+
+		if(iter != vars.end()){
+			return true;
+		}
+
+		iter=find(vars.begin(),vars.end(),-var);
+		if(iter != vars.end()){
+			return true;
+		}
+
+		return false;
+	}
+
+	bool var_sign(int var){
+
+		vector<int>::iterator iter;
+		iter=find(vars.begin(),vars.end(),var);
+
+		if(iter != vars.end()){
+			return true;
+		}
+
+		iter=find(vars.begin(),vars.end(),-var);
+		if(iter != vars.end()){
+			return false;
+		}
+
+	}
+
 	bool unit_clause(){
 		if(n_remaining==1 && !value){
 			return true;
@@ -119,6 +152,24 @@ bool check_for_sat(vector<clause> clauses){
     return ans;
 } 
 
+bool check_for_pure_and_assign(vector<clause> &clauses, int index){
+
+	bool pure=0;
+	vector<bool> var_values(0);
+
+	for(int i=0;i<clauses.size();i++){
+
+		if(clauses[i].exist(index+1)){
+
+			var_values.push_back()
+
+		}
+	}
+
+
+
+}
+
 int main(){
 	
 	int n;  //number of clauses
@@ -150,10 +201,31 @@ int main(){
 		sat=check_for_sat(clauses);
 	}
 	
+	
+
 	if(!sat){
-	    for(int i=0;i<n;i++){
-	        if()
-	    }
+
+		/*vector<clause> clauses2(0);
+		for(int i=0;i<n;i++){
+			if(!clauses[i].return_value()){
+				clauses2.push_back(clauses[i]);
+			}
+		}
+
+		int n2=clauses2.size();*/
+
+/*		vector<bool> vars2=vars;
+		vector<bool> assigned_vars2=assigned_vars;*/
+
+		for(int i=0;i<m;i++){
+			if(assigned_vars[i]==0){
+
+				bool pure=check_for_pure(clauses,i);
+
+			}
+		}
+
+	    
 	}
 
 }
